@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:codility_test_lokatani/model/species_list_model.dart';
-import 'package:codility_test_lokatani/service/http_base_client.dart';
-import 'package:codility_test_lokatani/service/http_exception.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
