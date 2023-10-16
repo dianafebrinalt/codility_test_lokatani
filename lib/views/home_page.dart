@@ -1,5 +1,7 @@
 import 'package:codility_test_lokatani/controller/home_page_controller.dart';
 import 'package:codility_test_lokatani/views/widget/product_item_view.dart';
+import 'package:codility_test_lokatani/views/widget/sunlight_category_view.dart';
+import 'package:codility_test_lokatani/views/widget/watering_category_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -15,9 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final HomePageController homePageController = Get.put(HomePageController());
-
-  final List<String> sunlightCategories = ['Full Sun', 'Part Shade', 'Filtered Shade', 'Part Sun/Shade'];
-  final List<String> wateringCategories = ['Frequent', 'Average'];
 
  List<String> selectedSunlightCategory = [];
   @override
@@ -51,33 +50,7 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 15
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: sunlightCategories
-                  .map((sunlightCategory) => FilterChip(
-                    selected: !selectedSunlightCategory.isEmpty,
-                    padding: const EdgeInsets.all(8),
-                    label: Text(
-                      sunlightCategory,
-                      style: const TextStyle(
-                        fontFamily: 'avenir', 
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12
-                      ),
-                    ),
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          selectedSunlightCategory = selectedSunlightCategory;
-                        }
-                      });
-                    },
-                  )
-                ).toList(),
-              ),
-            ),
+            const SunlightCategoryView(),
             const SizedBox(height: 5),
             const Text(
               "Watering",
@@ -87,51 +60,44 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 15
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: wateringCategories
-                .map((sunlightCategory) => FilterChip(
-                  padding: const EdgeInsets.all(5),
-                  label: Text(
-                    sunlightCategory,
-                    style: const TextStyle(
-                        fontFamily: 'avenir', 
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12
-                      ),
-                    ),
-                    onSelected: (selected) {
-                              
-                    },
-                )
-              ).toList(),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-              child: Obx(() {
-                if (homePageController.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return StaggeredGridView.countBuilder(
-                    crossAxisCount: 2,
-                    itemCount: homePageController.productList.length,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    itemBuilder: (context, index) {
-                      return ProductItem( 
-                        plantSameWateringImage: homePageController.productList.where((i) => i.watering == homePageController.productList[index].watering && i.sunlight.contains(homePageController.productList[index].sunlight.first)).toList(),
-                        speciesData: homePageController.productList[index],
-                      );
-                    },
-                    staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
-                  );
+            const WateringCategoryView(),
+            const SizedBox(height: 10),
+            Expanded(
+                child: Obx(() {
+                  if (homePageController.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    var newProductList = <SpeciesListData>[];
+                    if (homePageController.selectedWateringCategory.isEmpty && homePageController.selectedWateringCategory.isEmpty) {
+                      newProductList = homePageController.productList;
+                    } else if (homePageController.selectedWateringCategory.isEmpty && homePageController.selectedWateringCategory.isNotEmpty) {
+                      newProductList = homePageController.productList.where((i) => i.watering.toLowerCase() == homePageController.selectedWateringCategory.value.toLowerCase() && i.sunlight.contains(homePageController.selectedSunlightCategory.value.toLowerCase())).toList();
+                    } else {
+                      if (homePageController.selectedWateringCategory.isNotEmpty) {
+                        newProductList = homePageController.productList.where((i) => i.watering.toLowerCase() == homePageController.selectedWateringCategory.value).toList();
+                      } else {
+                        newProductList = homePageController.productList.where((i) => i.sunlight.contains(homePageController.selectedSunlightCategory.value)).toList();
+                      }
+                    }
+                    return StaggeredGridView.countBuilder(
+                      crossAxisCount: 2,
+                      itemCount: newProductList.length,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      itemBuilder: (context, index) {
+                        return ProductItem( 
+                          plantSameWateringImage: newProductList.where((i) => i.watering == homePageController.productList[index].watering && i.sunlight.contains(homePageController.productList[index].sunlight.first)).toList(),
+                          speciesData: newProductList[index],
+                        );
+                      },
+                      staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
+                    );
+                  }
                 }
-              }),
+              ),
             )
-        ]),
+          ]
+        ),
       ),
     );
   }
