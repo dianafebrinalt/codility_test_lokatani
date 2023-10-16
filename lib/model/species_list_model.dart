@@ -52,8 +52,8 @@ class SpeciesListData {
     List<String> scientificName;
     List<String> otherName;
     String cycle;
-    Watering watering;
-    List<Sunlight> sunlight;
+    String watering;
+    List<String> sunlight;
     DefaultImage? defaultImage;
 
     SpeciesListData({
@@ -73,8 +73,8 @@ class SpeciesListData {
         scientificName: List<String>.from(json["scientific_name"].map((x) => x)),
         otherName: List<String>.from(json["other_name"].map((x) => x)),
         cycle: json["cycle"],
-        watering: wateringValues.map[json["watering"]]!,
-        sunlight: List<Sunlight>.from(json["sunlight"].map((x) => sunlightValues.map[x]!)),
+        watering: json["watering"]!,
+        sunlight: List<String>.from(json["sunlight"].map((x) => x)),
         defaultImage: json["default_image"] == null ? null : DefaultImage.fromJson(json["default_image"]),
     );
 
@@ -84,8 +84,8 @@ class SpeciesListData {
         "scientific_name": List<dynamic>.from(scientificName.map((x) => x)),
         "other_name": List<dynamic>.from(otherName.map((x) => x)),
         "cycle": cycle,
-        "watering": wateringValues.reverse[watering],
-        "sunlight": List<dynamic>.from(sunlight.map((x) => sunlightValues.reverse[x])),
+        "watering": watering,
+        "sunlight": List<dynamic>.from(sunlight.map((x) => x)),
         "default_image": defaultImage?.toJson(),
     };
 }
@@ -146,32 +146,6 @@ final licenseNameValues = EnumValues({
     "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)": LicenseName.ATTRIBUTION_SHARE_ALIKE_30_UNPORTED_CC_BY_SA_30,
     "Attribution-ShareAlike License": LicenseName.ATTRIBUTION_SHARE_ALIKE_LICENSE,
     "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication": LicenseName.CC0_10_UNIVERSAL_CC0_10_PUBLIC_DOMAIN_DEDICATION
-});
-
-enum Sunlight {
-    FILTERED_SHADE,
-    FULL_SUN,
-    PART_SHADE,
-    PART_SUN_PART_SHADE,
-    SUNLIGHT_FULL_SUN
-}
-
-final sunlightValues = EnumValues({
-    "filtered shade": Sunlight.FILTERED_SHADE,
-    "full sun": Sunlight.FULL_SUN,
-    "part shade": Sunlight.PART_SHADE,
-    "part sun/part shade": Sunlight.PART_SUN_PART_SHADE,
-    "Full sun": Sunlight.SUNLIGHT_FULL_SUN
-});
-
-enum Watering {
-    AVERAGE,
-    FREQUENT
-}
-
-final wateringValues = EnumValues({
-    "Average": Watering.AVERAGE,
-    "Frequent": Watering.FREQUENT
 });
 
 class EnumValues<T> {
