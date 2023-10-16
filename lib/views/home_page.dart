@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 
+import '../model/species_list_model.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({ Key? key }) : super(key: key);
 
@@ -26,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Kind of Plant",
+          "Greenhouse Jakarta",
           style: TextStyle(
             fontFamily: 'avenir', 
             fontWeight: FontWeight.w800
@@ -119,7 +121,10 @@ class _HomePageState extends State<HomePage> {
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                     itemBuilder: (context, index) {
-                      return ProductItem(homePageController.productList[index]);
+                      return ProductItem( 
+                        plantSameWateringImage: homePageController.productList.where((i) => i.watering == homePageController.productList[index].watering && i.sunlight.contains(homePageController.productList[index].sunlight.first)).toList(),
+                        speciesData: homePageController.productList[index],
+                      );
                     },
                     staggeredTileBuilder: (index) => const StaggeredTile.fit(1),
                   );
