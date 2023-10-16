@@ -7,6 +7,8 @@ class HomePageController extends GetxController {
   var isLoading = true.obs;
   var productList = <SpeciesListData>[].obs;
   var productResponse = SpeciesListResponse;
+  var selectedSunlightCategory = "".obs;
+  var selectedWateringCategory = "".obs;
 
   @override
   void onInit() {
