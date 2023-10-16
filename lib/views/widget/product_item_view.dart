@@ -1,16 +1,27 @@
 import 'package:codility_test_lokatani/model/species_list_model.dart';
+import 'package:codility_test_lokatani/views/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProductItem extends StatelessWidget {
   final SpeciesListData speciesData;
-  const ProductItem(this.speciesData, {Key? key}) : super(key: key);
+  final List<SpeciesListData> plantSameWateringImage;
+  
+  const ProductItem({
+    required this.speciesData, 
+    required this.plantSameWateringImage, 
+    Key? key
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print("HAI HAI HAI");
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return DetailPage(
+            speciesData: speciesData, 
+            plantSameWateringImage: plantSameWateringImage);
+        }));
       },
       child: Card(
         elevation: 2,
